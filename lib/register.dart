@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'login.dart';  // Import the LoginScreen
+import 'login.dart';
 
 class RegisterScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   Future<void> _register(BuildContext context) async {
-    try {
+     try {
       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text,
@@ -31,12 +31,13 @@ class RegisterScreen extends StatelessWidget {
       );
     } on FirebaseAuthException catch (e) {
       // Handle specific Firebase authentication errors
-      print('Registration failed: ${e.message}');
+      print('Sign Up failed: ${e.message}');
 
       // You can display an error message to the user
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Registration failed: ${e.message}'),
+          backgroundColor: Color.fromARGB(255, 197, 161, 42),
           duration: Duration(seconds: 3),
         ),
       );
@@ -46,33 +47,46 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text('Register'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: emailController,
-              decoration: InputDecoration(labelText: 'Email'),
+      body: Container(
+        width: double.infinity,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(50),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(
+                  'assets/images/bubble-tea.png',
+                  width: 200,
+                  height: 200,
+                ),
+                SizedBox(height: 20),
+                TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(labelText: 'Email'),
+                ),
+                TextField(
+                  controller: passwordController,
+                  decoration: InputDecoration(labelText: 'Password'),
+                  obscureText: true,
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () => _register(context),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.brown,
+                    onPrimary: Colors.white,
+                  ),
+                  child: Text('Sign Up'),
+                ),
+              ],
             ),
-            TextField(
-              controller: passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => _register(context),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.pink, // Set the pink color here
-                onPrimary: Colors.white,
-              ),
-              child: Text('Register'),
-            ),
-          ],
+          ),
         ),
       ),
     );
